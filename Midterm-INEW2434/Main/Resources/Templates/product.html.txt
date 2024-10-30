@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="antiqueVideoGamesApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="ProductController">
+
+    <header>
+        <h1>{{product.title}}</h1>
+        <p>Details and information about this classic video game.</p>
+    </header>
+
+    <section id="product-details">
+        <img ng-src="{{product.imageUrl}}" alt="{{product.title}} image">
+        <h2>Title: {{product.title}}</h2>
+        <p><strong>Release Year:</strong> {{product.releaseYear}}</p>
+        <p><strong>Genre:</strong> {{product.genre}}</p>
+        <p><strong>Description:</strong> {{product.description}}</p>
+        <p><strong>Price:</strong> ${{product.price}}</p>
+        <button>Add to Cart</button>
+    </section>
+
+    <script>
+        var app = angular.module('antiqueVideoGamesApp', []);
+        app.controller('ProductController', function($scope, $http, $location) {
+            var urlParams = new URLSearchParams(window.location.search);
+            var productId = urlParams.get('id');
+            
+            if (productId) {
+                $http.get('/api/products/' + productId).then(function(response) {
+                    $scope.product = response.data;
+                }, function(error) {
+                    console.error("Error fetching product details:", error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
